@@ -4,15 +4,10 @@ def get_versions():
 
 versions = [
     {
-        "number": "0.0.2",
-        "features": [
-            "1. update help info",
-        ],
-    },
-    {
         "number": "0.0.1",
         "features": [
             "1. init",
+            "2. build mutchecker for resequencing data",
         ],
     },
 ]
