@@ -4,35 +4,18 @@ from mutchecker.src.miniprot import miniprot_job
 from mutchecker.src.bamstat import get_mRNA_depth, parse_depth_file
 from yxseq import read_gff_file, Gene
 from yxmath.interval import merge_intervals, overturn, interval_minus_set
-from yxutil import cmd_run, mkdir, rmdir, pickle_load, have_file, move_file
+from yxutil import cmd_run, mkdir, rmdir, pickle_load, have_file, multiprocess_running
 import json
 import os
 import warnings
 warnings.filterwarnings('ignore')
 
-
-def reseq_main(args):
-    genome_file = os.path.realpath(args.genome_file)
-    gff_file = os.path.realpath(args.gff_file)
-    bam_file = os.path.realpath(args.bam_file)
-    gene_id = args.gene_id
-    work_dir = os.path.realpath(args.output_dir)
-    exon_extend = args.exon_extend
-    clean = args.clean
+def reseq_pipeline(gene_id, mRNA, genome_file, gff_file, bam_file, exon_extend, work_dir, clean):
 
     # skip if the gene has been processed
     if not have_file(work_dir + "/result.json"):
         # Load gene information
         mkdir(work_dir, False)
-        if os.path.isfile(gff_file):
-            gene_dict = read_gff_file(gff_file)['gene']
-            gene = gene_dict[gene_id]
-            gene = Gene(from_gf=gene)
-            gene.build_gene_seq(genome_file)
-            mRNA = gene.model_mRNA
-        elif os.path.isdir(gff_file):
-            mRNA_pkl = "%s/%s.pkl" % (gff_file, gene_id)
-            mRNA = pickle_load(mRNA_pkl)
         cds_list = [cds for cds in mRNA.sub_features if cds.type == 'CDS']
 
         # state reseq depth and coverage in the CDS region
@@ -210,6 +193,40 @@ def reseq_main(args):
                 rmdir("%s/annotation/%s/anno_pt.fasta" % (work_dir, i))
         # depth
         rmdir("%s/cds_depth.txt" % work_dir)
+
+
+def reseq_main(args):
+    genome_file = os.path.realpath(args.genome_file)
+    gff_file = os.path.realpath(args.gff_file)
+    bam_file = os.path.realpath(args.bam_file)
+    gene_id = args.gene_id
+    work_dir = os.path.realpath(args.output_dir)
+    exon_extend = args.exon_extend
+    clean = args.clean
+
+    if not gene_id is None:
+        if os.path.isfile(gff_file):
+            gene_dict = read_gff_file(gff_file)['gene']
+            gene = gene_dict[gene_id]
+            gene = Gene(from_gf=gene)
+            gene.build_gene_seq(genome_file)
+            mRNA = gene.model_mRNA
+        elif os.path.isdir(gff_file):
+            mRNA_pkl = "%s/%s.pkl" % (gff_file, gene_id)
+            mRNA = pickle_load(mRNA_pkl)
+        reseq_pipeline(gene_id, mRNA, genome_file, gff_file, bam_file, exon_extend, work_dir, clean)
+    else:
+        gene_dict = read_gff_file(gff_file)['gene']
+        mkdir(work_dir)
+        num = 0
+        for gene_id in gene_dict:
+            gene = gene_dict[gene_id]
+            gene = Gene(from_gf=gene)
+            gene.build_gene_seq(genome_file)
+            mRNA = gene.model_mRNA
+            reseq_pipeline(gene_id, mRNA, genome_file, gff_file, bam_file, exon_extend, work_dir+"/"+gene_id, clean)
+            num += 1
+            print("Gene %s done (%d/%d)." % (gene_id, num, len(gene_dict)))
 
 
 def subcmd2_main(args):

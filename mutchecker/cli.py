@@ -61,8 +61,8 @@ class Job(object):
                               help='reference gff file')
         parser_a.add_argument('bam_file', type=str,
                               help='sorted and markdup bam file')
-        parser_a.add_argument('gene_id', type=str,
-                              help='gene id')
+        parser_a.add_argument('-i', '--gene_id', type=str,
+                              help='gene id, default=None', default=None)
         parser_a.add_argument('-o', '--output_dir', type=str,
                               help='output directory, default=\"mutchecker_output\"',
                               default="mutchecker_output")
