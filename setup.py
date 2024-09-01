@@ -24,6 +24,8 @@ setuptools.setup(
 
     install_requires=[
         "yxutil",
+        "yxseq",
+        "yxmath",
         "numpy>=1.18.1",
     ],
 

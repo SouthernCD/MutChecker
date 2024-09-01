@@ -1,7 +1,7 @@
 from mutchecker.src.utils import read_sequence_from_file
 from mutchecker.src.assem import get_range_haplotype, get_all_hap_combinations
 from mutchecker.src.miniprot import miniprot_job
-from mutchecker.src.bamstat import get_mRNA_depth, parse_depth_file
+from mutchecker.src.bamstat import get_mRNA_depth, parse_depth_file, get_all_cds_depth
 from yxseq import read_gff_file, Gene
 from yxmath.interval import merge_intervals, overturn, interval_minus_set
 from yxutil import cmd_run, mkdir, rmdir, pickle_load, have_file, multiprocess_running
@@ -9,6 +9,7 @@ import json
 import os
 import warnings
 warnings.filterwarnings('ignore')
+
 
 def reseq_pipeline(gene_id, mRNA, genome_file, gff_file, bam_file, exon_extend, work_dir, clean):
 
@@ -136,7 +137,7 @@ def reseq_pipeline(gene_id, mRNA, genome_file, gff_file, bam_file, exon_extend, 
         # cmd_string = "clustalw2 -INFILE=%s -ALIGN -OUTPUT=FASTA -OUTFILE=%s.aln -type=DNA" % (
         #     all_cds_file, all_cds_file)
         cmd_string = "mafft --preservecase --auto %s > %s.aln" % (
-            all_cds_file, all_cds_file)        
+            all_cds_file, all_cds_file)
         cmd_run(cmd_string, cwd=anno_work_dir)
 
         # merge all results
@@ -214,7 +215,8 @@ def reseq_main(args):
         elif os.path.isdir(gff_file):
             mRNA_pkl = "%s/%s.pkl" % (gff_file, gene_id)
             mRNA = pickle_load(mRNA_pkl)
-        reseq_pipeline(gene_id, mRNA, genome_file, gff_file, bam_file, exon_extend, work_dir, clean)
+        reseq_pipeline(gene_id, mRNA, genome_file, gff_file,
+                       bam_file, exon_extend, work_dir, clean)
     else:
         gene_dict = read_gff_file(gff_file)['gene']
         mkdir(work_dir)
@@ -224,14 +226,20 @@ def reseq_main(args):
             gene = Gene(from_gf=gene)
             gene.build_gene_seq(genome_file)
             mRNA = gene.model_mRNA
-            reseq_pipeline(gene_id, mRNA, genome_file, gff_file, bam_file, exon_extend, work_dir+"/"+gene_id, clean)
+            reseq_pipeline(gene_id, mRNA, genome_file, gff_file,
+                           bam_file, exon_extend, work_dir+"/"+gene_id, clean)
             num += 1
             print("Gene %s done (%d/%d)." % (gene_id, num, len(gene_dict)))
 
 
-def subcmd2_main(args):
-    print(vars(args))
-    pass
+def bamstat_main(args):
+    depth_file = args.bam_file + ".cds.depth"
+    result_json = args.bam_file + ".cds.depth.json"
+    if not have_file(depth_file) and not have_file(result_json):
+        get_all_cds_depth(args.bam_file, args.gff_file, depth_file)
+        depth_output_dict = parse_depth_file(depth_file)
+        with open(result_json, 'w') as f:
+            f.write(json.dumps(depth_output_dict, indent=4))
 
 
 if __name__ == '__main__':
