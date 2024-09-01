@@ -6,7 +6,7 @@ MutChecker is a tool for checking the mutation status of a given genome range.
 ## Installation
 
 ```bash
-mamba create -n mutchecker python=3.10 freebayes whatshap bcftools samtools htslib
+mamba create -n mutchecker -c bioconda -y python==3.9 biopython==1.80 freebayes whatshap bcftools samtools htslib numexpr
 conda activate mutchecker
 pip install mutchecker
 ```
