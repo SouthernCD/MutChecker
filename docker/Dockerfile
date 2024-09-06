@@ -7,7 +7,7 @@ RUN apt-get update && apt-get upgrade -y -q && \
     conda config --add channels bioconda && \
     conda config --add channels conda-forge && \
     conda install -y -c conda-forge mamba && \
-    mamba install -c bioconda -y biopython==1.80 freebayes whatshap bcftools samtools htslib numexpr && \
+    mamba install -c bioconda -y biopython==1.80 freebayes whatshap bcftools samtools htslib numexpr miniprot blast && \
     pip install mutchecker && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
