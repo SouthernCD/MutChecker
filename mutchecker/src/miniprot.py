@@ -154,6 +154,8 @@ def parse_miniprot_aln(miniprot_out_aln):
 
     target_pt_seq = target_pt_str.replace('.', '').replace(
         ' ', '').replace('!!', 'X').replace('!', 'X')
+    target_pt_seq = target_pt_str.replace('.', '').replace(
+        ' ', '').replace('$$', 'X').replace('$', 'X')
     endwith_star = False
     if target_pt_seq.endswith('*'):
         endwith_star = True
