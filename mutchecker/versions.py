@@ -4,6 +4,12 @@ def get_versions():
 
 versions = [
     {
+        "number": "0.0.5",
+        "features": [
+            "1. zip the output files if use clean flag",
+        ],
+    },    
+    {
         "number": "0.0.4",
         "features": [
             "1. fix bug in miniprot frame shift",

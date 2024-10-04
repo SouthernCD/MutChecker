@@ -19,4 +19,4 @@ ENTRYPOINT ["mutchecker"]
 
 # 添加元数据
 LABEL Author="XYX"
-LABEL Version="v0.0.3"
+LABEL Version="v0.0.5"

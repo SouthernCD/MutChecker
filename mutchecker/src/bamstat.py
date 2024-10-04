@@ -60,13 +60,11 @@ def parse_depth_file(depth_file):
 
 
 if __name__ == '__main__':
-    genome_file = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Sbicolor.v5.1/Sbicolor_730_v5.0.fa'
-    gff_file = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Sbicolor.v5.1/Sbicolor_730_v5.1.gene_exons.gff3'
-    # bam_file = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Data/reseq/raw_data/map/IFJD.sorted.markdup.bam'
-    bam_file = "/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Data/reseq/bam/IPDE.sorted.markdup.bam"
+    genome_file = 'Sbicolor_730_v5.0.fa'
+    gff_file = 'Sbicolor_730_v5.1.gene_exons.gff3'
+    bam_file = "IPDE.sorted.markdup.bam"
     gene_id = 'Sobic.005G213600.v5.1'
-    # gene_id = 'Sobic.001G000200.v5.1'
-    work_dir = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Data/reseq/bam/test'
+    work_dir = 'test'
 
     from yxseq import read_gff_file, Gene
     from yxutil import cmd_run, have_file, rmdir, pickle_dump

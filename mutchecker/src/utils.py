@@ -28,7 +28,7 @@ def gff_preparser(gff_file, genome_file, output_dir):
 
 
 if __name__ == "__main__":
-    gff_file = "/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Sbicolor.v5.1/Sbicolor_730_v5.1.gene_exons.gff3"
-    genome_file = "/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Sbicolor.v5.1/Sbicolor_730_v5.0.fa"
-    output_dir = "/lustre/home/xuyuxing/Work/Jesse/local_adaptation/4.gene_loss/Sbicolor_730_v5.1.gene_exons.gff3.pkls"
+    gff_file = "Sbicolor_730_v5.1.gene_exons.gff3"
+    genome_file = "Sbicolor_730_v5.0.fa"
+    output_dir = "Sbicolor_730_v5.1.gene_exons.gff3.pkls"
     gff_preparser(gff_file, genome_file, output_dir)

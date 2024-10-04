@@ -175,9 +175,9 @@ def parse_miniprot_aln(miniprot_out_aln):
 
 
 if __name__ == '__main__':
-    query_file = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/tmp/ref_prot.fasta'
-    subject_file = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/tmp/hap1.pseudo.fasta'
-    miniprot_out = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/tmp/hap1.pseudo.miniprot.out'
+    query_file = 'ref_prot.fasta'
+    subject_file = 'hap1.pseudo.fasta'
+    miniprot_out = 'hap1.pseudo.miniprot.out'
     run_miniprot(query_file, subject_file, miniprot_out)
     miniprot_out_gff, miniprot_out_aln = split_miniprot_out(miniprot_out)
     hit_gf = parse_miniprot_gff(miniprot_out_gff)

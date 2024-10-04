@@ -7,6 +7,7 @@ from yxmath.interval import merge_intervals, overturn, interval_minus_set
 from yxutil import cmd_run, mkdir, rmdir, pickle_load, have_file, multiprocess_running
 import json
 import os
+import shutil
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -195,6 +196,10 @@ def reseq_pipeline(gene_id, mRNA, genome_file, gff_file, bam_file, exon_extend, 
         # depth
         rmdir("%s/cds_depth.txt" % work_dir)
 
+        # zip work_dir
+        shutil.make_archive(work_dir, 'zip', work_dir)
+        rmdir(work_dir)
+
 
 def reseq_main(args):
     genome_file = os.path.realpath(args.genome_file)
@@ -248,11 +253,12 @@ if __name__ == '__main__':
         pass
 
     args = abc()
-    args.genome_file = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Sbicolor.v5.1/Sbicolor_730_v5.0.fa'
-    args.gff_file = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Sbicolor.v5.1/Sbicolor_730_v5.1.gene_exons.gff3'
-    args.bam_file = "/lustre/home/xuyuxing/Work/Jesse/local_adaptation/0.reference/Data/reseq/bam/IZPX.sorted.markdup.bam"
+    args.genome_file = 'Sbicolor_730_v5.0.fa'
+    args.gff_file = 'Sbicolor_730_v5.1.gene_exons.gff3'
+    args.bam_file = "IZPX.sorted.markdup.bam"
     args.gene_id = 'Sobic.003G269600.v5.1'
-    args.output_dir = '/lustre/home/xuyuxing/Work/Jesse/local_adaptation/tmp'
+    args.output_dir = 'Sobic.003G269600.v5.1.vs.IZPX'
     args.exon_extend = 500
+    args.clean = True
 
     reseq_main(args)
